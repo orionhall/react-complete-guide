@@ -8,7 +8,8 @@ class App extends Component {
             { name: 'Orion Hall', age: 28 },
             { name: 'Jaron Popko', age: 29 },
             { name: 'Molly Ritter', age: 30 }
-        ]
+        ],
+        showPersons: false
     };
 
     switchNameHandler = (newName) => {
@@ -22,27 +23,56 @@ class App extends Component {
         });
     };
 
+    togglePersonsHandler = () => {
+        const doesShow = this.state.showPersons;
+        this.setState({ showPersons: !doesShow });
+    };
+
+    nameChangedHandler = (event) => {
+        this.setState({
+            people: [
+                { name: 'Orion Hall', age: 28 },
+                { name: event.target.value, age: 29 },
+                { name: 'Molly Ritter', age: 30 }
+            ]
+        });
+    };
+
     render () {
+        const style = {
+            backgroundColor: 'white',
+            font: 'inherit',
+            border: '1px solid blue',
+            padding: '8px',
+            cursor: 'pointer'
+        };
+
+        let persons = null;
+        if (this.state.showPersons) {
+            persons = (
+                <div>
+                    {this.state.people.map((person) => {
+                        return <Person
+                            name={person.name}
+                            age={person.age}/>;
+                    })};
+                </div>
+            )
+        }
+
         return (
             <div className="App">
-                <h1>Hi, I'm a your mom</h1>
-                <p>Yes</p>
+                <div>
+                    I'm a React app
+                </div>
                 <button
+                    style={style}
                     // Use an arrow function to pass switchNameHandler with a parameter
-                    // This can cause performance implications because a new function is made each time the component renders
-                    onClick={() => this.switchNameHandler('Maximilian')}>Switch Name
+                    // This can cause performance implications because a new function is made each time the component
+                    // renders
+                    onClick={this.togglePersonsHandler}>Toggle Persons
                 </button>
-                <Person
-                    name={this.state.people[0].name}
-                    age={this.state.people[0].age}/>
-                <Person
-                    name={this.state.people[1].name}
-                    age={this.state.people[1].age}
-                    // Pass in arguments by using .bind because you are passing the function itself, not running it
-                    click={this.switchNameHandler.bind(this, 'Artemis')}/>
-                <Person
-                    name={this.state.people[2].name}
-                    age={this.state.people[2].age}/>
+                {persons}
             </div>
         );
     }
