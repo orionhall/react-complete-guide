@@ -1,26 +1,16 @@
 import React, { Component } from 'react';
-import './App.css';
 import Person from './Person/Person';
+
+import './App.css';
 
 class App extends Component {
     state = {
-        people: [
-            { name: 'Orion Hall', age: 28 },
-            { name: 'Jaron Popko', age: 29 },
-            { name: 'Molly Ritter', age: 30 }
+        persons: [
+            { id: 'dlkfa', name: 'Orion Hall', age: 28 },
+            { id: 'dlkfb', name: 'Jaron Popko', age: 29 },
+            { id: 'dlkfc', name: 'Molly Ritter', age: 30 }
         ],
         showPersons: false
-    };
-
-    switchNameHandler = (newName) => {
-        // On clicking the button call the function provided by useState which will update the state
-        this.setState({
-            people: [
-                { name: newName, age: 28 },
-                { name: 'Madonna Ciccone', age: 29 },
-                { name: 'Robyn Fenty', age: 35 }
-            ]
-        });
     };
 
     togglePersonsHandler = () => {
@@ -28,19 +18,16 @@ class App extends Component {
         this.setState({ showPersons: !doesShow });
     };
 
-    nameChangedHandler = (event) => {
-        this.setState({
-            people: [
-                { name: 'Orion Hall', age: 28 },
-                { name: event.target.value, age: 29 },
-                { name: 'Molly Ritter', age: 30 }
-            ]
-        });
+    deletePersonHandler = (personIndex) => {
+        const persons = [...this.state.persons];
+        persons.splice(personIndex, 1);
+        this.setState({ persons });
     };
 
     render () {
         const style = {
-            backgroundColor: 'white',
+            backgroundColor: 'green',
+            color: 'white',
             font: 'inherit',
             border: '1px solid blue',
             padding: '8px',
@@ -51,28 +38,38 @@ class App extends Component {
         if (this.state.showPersons) {
             persons = (
                 <div>
-                    {this.state.people.map((person) => {
+                    {this.state.persons.map((person, index) => {
                         return <Person
+                            click={() => this.deletePersonHandler(index)}
                             name={person.name}
-                            age={person.age}/>;
-                    })};
+                            age={person.age}
+                            key={person.id}
+                        />;
+                    })}
                 </div>
-            )
+            );
+            style.backgroundColor = 'red';
+        }
+
+        const classes = [];
+        if (this.state.persons.length <= 2) {
+            classes.push('red');
+        }
+        if (this.state.persons.length <= 1) {
+            classes.push('bold');
         }
 
         return (
             <div className="App">
-                <div>
-                    I'm a React app
-                </div>
+                <h1>I'm a React app</h1>
+                <p className={classes.join(' ')}>Dis is rly wrkng, keke</p>
                 <button
                     style={style}
-                    // Use an arrow function to pass switchNameHandler with a parameter
-                    // This can cause performance implications because a new function is made each time the component
-                    // renders
                     onClick={this.togglePersonsHandler}>Toggle Persons
                 </button>
-                {persons}
+                <div>
+                    {persons}
+                </div>
             </div>
         );
     }
